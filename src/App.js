@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './Navbar';
-import BlogList from './BlogList';
-import BlogPost from './BlogPost';
+import Navbar from './components/Navbar';
+import BlogList from './components/BlogList';
+import BlogPost from './components/BlogPost';
 
 const App = () => {
   const [movies, setMovies] = useState([]);
