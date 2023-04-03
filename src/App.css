@@ -1,5 +1,5 @@
 body{
-  background: rgba(0, 0, 0, 0.455);
+  background-image: linear-gradient(black, gray);
   color: white;
   
 }
@@ -8,7 +8,7 @@ body{
   display: flex;
   justify-content: center; 
   align-items: center; 
-  height: 20vh;
+  height: 30vh;
 
 }
 
