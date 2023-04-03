@@ -8,6 +8,7 @@ const App = () => {
   const [searchValue, setSearchValue] = useState('');
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [currentView, setCurrentView] = useState('blogList');
+  const [currentMovieIndex, setCurrentMovieIndex] = useState(null);
 
   const getMovieRequest = async () => {
     const url = `http://www.omdbapi.com/?s=${searchValue}&apikey=d29dc057`;
@@ -18,13 +19,21 @@ const App = () => {
       setMovies(responseJson.Search);
     }
   };
+  
 
   useEffect(() => {
     getMovieRequest();
   }, [searchValue]);
 
+
   const handleMovieSelect = (movie) => {
     setSelectedMovie(movie);
+    setCurrentView('blogPost');
+  };
+
+  const handleBlogPostClick = (movie, index) => {
+    setSelectedMovie(movie);
+    setCurrentMovieIndex(index);
     setCurrentView('blogPost');
   };
 
@@ -33,8 +42,9 @@ const App = () => {
     setSelectedMovie(null);
   };
 
-  const handleBlogPostClick = () => {
-    setCurrentView('blogPost');
+  const handleBackClick = () => {
+    setCurrentView('blogList');
+    setSelectedMovie(null);
   };
 
   return (
@@ -52,18 +62,22 @@ const App = () => {
         </div>
       </div>
       <div className='row'>
-      <Navbar handleBlogListClick={handleBlogListClick} handleBlogPostClick={handleBlogPostClick} />
-      <div className='blog-container'>
-        {currentView === 'blogList' ? (
-          <BlogList movies={movies} handleMovieSelect={handleMovieSelect}/>
-        ) : (
-          <BlogPost movie={selectedMovie} />
-        )}
+        <Navbar
+          handleBlogListClick={handleBlogListClick}
+          handleBlogPostClick={handleBlogPostClick}
+        />
+        <div className='blog-container'>
+          {currentView === 'blogList' ? (
+            <BlogList movies={movies} handleMovieSelect={handleMovieSelect} />
+          ) : (
+            <BlogPost movie={selectedMovie} handleBackClick={handleBackClick} />
+          )}
         </div>
       </div>
     </div>
   );
 };
+
 
 
 export default App;
