@@ -6,7 +6,7 @@ const BlogList = (props) => {
     };
 
     return (
-        <>
+        <div className="posters">
             {props.movies.map((movie, index) => (
                 <div className='d-flex justify-content-start m-3' onClick={() => handleMovieClick(movie)}>
                     <img src={movie.Poster} alt='movie'></img>
@@ -16,7 +16,7 @@ const BlogList = (props) => {
                 </div>    
             ))}
             
-        </>
+        </div>
     );
 };
 
