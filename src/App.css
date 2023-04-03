@@ -1,13 +1,22 @@
 body{
-  background: black;
+  background: rgba(0, 0, 0, 0.455);
   color: white;
-
+  
 }
-
 .movie-blog > .row{
 
-  overflow-x: auto;
-  flex-wrap: nowrap;
-  
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  height: 30vh;
 
 }
+
+.blog-container{
+  display: flex;
+  flex-direction:row;
+  height: 70vh;
+  width: 90%;
+}
+
+

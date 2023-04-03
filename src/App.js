@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './App.css'
 import Navbar from './components/Navbar';
 import BlogList from './components/BlogList';
 import BlogPost from './components/BlogPost';
@@ -8,7 +9,6 @@ const App = () => {
   const [searchValue, setSearchValue] = useState('');
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [currentView, setCurrentView] = useState('blogList');
-  const [currentMovieIndex, setCurrentMovieIndex] = useState(null);
 
   const getMovieRequest = async () => {
     const url = `http://www.omdbapi.com/?s=${searchValue}&apikey=d29dc057`;
@@ -31,9 +31,8 @@ const App = () => {
     setCurrentView('blogPost');
   };
 
-  const handleBlogPostClick = (movie, index) => {
-    setSelectedMovie(movie);
-    setCurrentMovieIndex(index);
+  const handleBlogPostClick = (movie) => {
+    handleMovieSelect(movie);
     setCurrentView('blogPost');
   };
 
@@ -61,7 +60,7 @@ const App = () => {
           />
         </div>
       </div>
-      <div className='row'>
+      <div className='row-bot'>
         <Navbar
           handleBlogListClick={handleBlogListClick}
           handleBlogPostClick={handleBlogPostClick}
