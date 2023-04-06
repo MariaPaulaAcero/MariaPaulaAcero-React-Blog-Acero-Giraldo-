@@ -33,6 +33,7 @@ const App = () => {
 
   const handleBlogPostClick = (movie) => {
     handleMovieSelect(movie);
+    alert("Debes seleccionar una pelicula o serie para ver su información");
     setCurrentView('blogPost');
   };
 
