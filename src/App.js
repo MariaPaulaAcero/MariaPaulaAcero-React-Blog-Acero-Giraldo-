@@ -151,7 +151,7 @@ const App = () => {
               {currentView === 'blogList' ? (
                 <BlogList
                   movies={favorites}
-
+                  handleMovieSelect={handleMovieSelect}
                   handleFavouritesClick={removeFavouriteMovie}
                   favoriteComponent={RemoveFavorites} />
               ) : (
