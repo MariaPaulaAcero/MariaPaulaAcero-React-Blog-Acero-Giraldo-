@@ -84,11 +84,8 @@ const App = () => {
     setFavorites(newFavouriteList);
     saveToLocalStorage(newFavouriteList);
   };
-  const handleFavoritesClick  =(movie) =>{
-    const favorites = [...this.state.favorites, movie];
-    this.setState({ favorites });
-  }
-  
+
+
 
 
   return (
@@ -114,7 +111,7 @@ const App = () => {
         <Navbar
           handleBlogListClick={handleBlogListClick}
           handleBlogPostClick={handleBlogPostClick}
-          handleFavoritesClick={handleFavoritesClick}
+          handleFavouritesClick={addFavoritesMS}
         />
         <div className='blog-container'>
           {currentView === 'blogList' ? (

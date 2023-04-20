@@ -5,6 +5,7 @@ const BlogList = (props) => {
     const FavoriteComponent = props.favoriteComponent;
     const handleMovieClick = (movie) => {
         props.handleMovieSelect(movie);
+   
     };
 
 
@@ -19,7 +20,7 @@ const BlogList = (props) => {
                 >
                     <img src={movie.Poster} alt="movie"></img>
                     <div
-                        onClick={() => props.handleFavoritesClick(movie)}
+                        onClick={() => props.handleFavouritesClick(movie)}
                         className="overlay d-flex align-items-center justify-content-center"
                     >
                         <FavoriteComponent />
