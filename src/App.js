@@ -7,6 +7,7 @@ import BlogPost from './components/BlogPost';
 import AddFavorite from './components/AddFavorite';
 import BlogListHeading from './components/BlogListHeading';
 import RemoveFavorites from './components/RemoveFavorites';
+import FavoriteView from './components/FavoriteView';
 
 const App = () => {
   const [movies, setMovies] = useState([]);
@@ -89,46 +90,12 @@ const App = () => {
 
 
   return (
-    <div className='container-fluid movie-blog'>
-
-      <div className='row d-flex align-items-center mt-4 mb-4'>
-        <BlogListHeading heading='Movies' />
-        <div className='col col-sm-4'>
-          <input
-
-            className='form-control'
-            type='search'
-            placeholder='Search'
-            aria-label='Search'
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-          />
-        </div>
-
-      </div>
-
-      <div className='row-bot'>
-        <Navbar
-          handleBlogListClick={handleBlogListClick}
-          handleBlogPostClick={handleBlogPostClick}
-          handleFavouritesClick={addFavoritesMS}
-        />
-        <div className='blog-container'>
-          {currentView === 'blogList' ? (
-            <BlogList
-              movies={movies}
-              handleMovieSelect={handleMovieSelect}
-              favoriteComponent={AddFavorite}
-              handleFavouritesClick={addFavoritesMS}
-            />
-          ) : (
-            <BlogPost movie={selectedMovie} handleBackClick={handleBackClick} />
-          )}
-        </div>
-
+    <div className='App'>
+      <FavoriteView/>
+      <div className='container-fluid movie-blog'>
 
         <div className='row d-flex align-items-center mt-4 mb-4'>
-          <BlogListHeading heading='Favorites' />
+          <BlogListHeading heading='Movies' />
           <div className='col col-sm-4'>
             <input
 
@@ -141,26 +108,63 @@ const App = () => {
             />
           </div>
 
-          <div className='row-bot'>
-            <Navbar
-              handleBlogListClick={handleBlogListClick}
-              handleBlogPostClick={handleBlogPostClick}
-              handleFavouritesClick={removeFavouriteMovie}
-            />
-            <div className='blog-container'>
-              {currentView === 'blogList' ? (
-                <BlogList
-                  movies={favorites}
-                  handleMovieSelect={handleMovieSelect}
-                  handleFavouritesClick={removeFavouriteMovie}
-                  favoriteComponent={RemoveFavorites} />
-              ) : (
-                <BlogPost movie={selectedMovie} handleBackClick={handleBackClick} />
-              )}
-            </div>
-          </div>
         </div>
 
+        <div className='row-bot'>
+          <Navbar
+            handleBlogListClick={handleBlogListClick}
+            handleBlogPostClick={handleBlogPostClick}
+            handleFavouritesClick={addFavoritesMS}
+          />
+          <div className='blog-container'>
+            {currentView === 'blogList' ? (
+              <BlogList
+                movies={movies}
+                handleMovieSelect={handleMovieSelect}
+                favoriteComponent={AddFavorite}
+                handleFavouritesClick={addFavoritesMS}
+              />
+            ) : (
+              <BlogPost movie={selectedMovie} handleBackClick={handleBackClick} />
+            )}
+          </div>
+
+
+          <div className='row d-flex align-items-center mt-4 mb-4'>
+            <BlogListHeading heading='Favorites' />
+            <div className='col col-sm-4'>
+              <input
+
+                className='form-control'
+                type='search'
+                placeholder='Search'
+                aria-label='Search'
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+            </div>
+
+            <div className='row-bot'>
+              <Navbar
+                handleBlogListClick={handleBlogListClick}
+                handleBlogPostClick={handleBlogPostClick}
+                handleFavouritesClick={removeFavouriteMovie}
+              />
+              <div className='blog-container'>
+                {currentView === 'blogList' ? (
+                  <BlogList
+                    movies={favorites}
+                    handleMovieSelect={handleMovieSelect}
+                    handleFavouritesClick={removeFavouriteMovie}
+                    favoriteComponent={RemoveFavorites} />
+                ) : (
+                  <BlogPost movie={selectedMovie} handleBackClick={handleBackClick} />
+                )}
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   );
