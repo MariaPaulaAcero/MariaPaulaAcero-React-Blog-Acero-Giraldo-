@@ -1,7 +1,6 @@
 import "./FavoriteView.css";
 import React, {useState, useEffect} from "react";
-import { collection, addDoc } from "firebase/firestore";
-import {db} from "../firebase";
+
 
 const FavoriteView = () => {
 
