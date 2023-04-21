@@ -9,7 +9,7 @@ import BlogListHeading from './components/BlogListHeading';
 import RemoveFavorites from './components/RemoveFavorites';
 import FavoriteView from './components/FavoriteView';
 import { db } from './firebase'
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 const App = () => {
   const [movies, setMovies] = useState([]);
@@ -69,6 +69,10 @@ const App = () => {
     setSelectedMovie(null);
   };
 
+  const handleRemoveClick = (movie) => {
+    removeFavouriteMovie(movie);
+  };
+
 
 
   const saveToLocalStorage = (items) => {
@@ -86,20 +90,23 @@ const App = () => {
     }
   };
 
+  
   const removeFavouriteMovie = async (movie) => {
-    const docRef = db.collection('favorites').doc(movie.imdbID);
+    const docRef = doc(db, 'favorites', movie.imdbID);
     try {
-      await docRef.delete();
+      await deleteDoc(docRef);
       const newFavouriteList = favorites.filter(
         (favorite) => favorite.imdbID !== movie.imdbID
       );
       setFavorites(newFavouriteList);
       saveToLocalStorage(newFavouriteList);
     } catch (error) {
+     
       console.error('Error removing document: ', error);
+      console.log('docRef: ', docRef);
     }
-  };
-
+};
+  
   const getFavorites = async () => {
     const favoritesRef = collection(db, 'favorites');
     const snapshot = await getDocs(favoritesRef);
@@ -153,18 +160,7 @@ const App = () => {
 
           <div className='row d-flex align-items-center mt-4 mb-4'>
             <BlogListHeading heading='Favorites' />
-            <div className='col col-sm-4'>
-              <input
-
-                className='form-control'
-                type='search'
-                placeholder='Search'
-                aria-label='Search'
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-              />
-            </div>
-
+            
             <div className='row-bot'>
               <Navbar
                 handleBlogListClick={handleBlogListClick}
