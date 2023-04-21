@@ -8,8 +8,8 @@ import AddFavorite from './components/AddFavorite';
 import BlogListHeading from './components/BlogListHeading';
 import RemoveFavorites from './components/RemoveFavorites';
 import FavoriteView from './components/FavoriteView';
-import {db} from './firebase'
-import { collection, addDoc } from "firebase/firestore";
+import { db } from './firebase'
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
 const App = () => {
   const [movies, setMovies] = useState([]);
@@ -36,6 +36,9 @@ const App = () => {
     if (movieFavourites) {
       setFavorites(movieFavourites);
     }
+    getFavorites().then(data => {
+      setFavorites(data);
+    });
   }, []);
 
 
@@ -71,32 +74,45 @@ const App = () => {
   const saveToLocalStorage = (items) => {
     localStorage.setItem('react-movie-app-favourites', JSON.stringify(items));
   };
-  
 
   const addFavoritesMS = async (movie) => {
     try {
       await addDoc(collection(db, "favorites"), movie);
       console.log("Document added to 'favorites' collection successfully");
+      const newFavouriteList = [...favorites, movie];
+      setFavorites(newFavouriteList);
     } catch (e) {
-      console.error("Error adding document to 'favorites' collection: ", e);
-    }
+      console.error("Error adding document to 'favorites' collection: ", e);
+    }
   };
 
-  const removeFavouriteMovie = (movie) => {
-    const newFavouriteList = favorites.filter(
-      (favorite) => favorite.imdbID !== movie.imdbID
-    );
-
-    setFavorites(newFavouriteList);
-    saveToLocalStorage(newFavouriteList);
+  const removeFavouriteMovie = async (movie) => {
+    const docRef = db.collection('favorites').doc(movie.imdbID);
+    try {
+      await docRef.delete();
+      const newFavouriteList = favorites.filter(
+        (favorite) => favorite.imdbID !== movie.imdbID
+      );
+      setFavorites(newFavouriteList);
+      saveToLocalStorage(newFavouriteList);
+    } catch (error) {
+      console.error('Error removing document: ', error);
+    }
   };
+
+  const getFavorites = async () => {
+    const favoritesRef = collection(db, 'favorites');
+    const snapshot = await getDocs(favoritesRef);
+    return snapshot.docs.map(doc => doc.data());
+  };
+
 
 
 
 
   return (
     <div className='App'>
-      <FavoriteView/>
+      <FavoriteView />
       <div className='container-fluid movie-blog'>
 
         <div className='row d-flex align-items-center mt-4 mb-4'>
