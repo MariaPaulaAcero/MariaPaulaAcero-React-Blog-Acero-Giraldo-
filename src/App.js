@@ -8,6 +8,8 @@ import AddFavorite from './components/AddFavorite';
 import BlogListHeading from './components/BlogListHeading';
 import RemoveFavorites from './components/RemoveFavorites';
 import FavoriteView from './components/FavoriteView';
+import {db} from './firebase'
+import { collection, addDoc } from "firebase/firestore";
 
 const App = () => {
   const [movies, setMovies] = useState([]);
@@ -71,10 +73,13 @@ const App = () => {
   };
   
 
-  const addFavoritesMS = (movie) => {
-    const newFavouriteList = [...favorites, movie];
-    setFavorites(newFavouriteList);
-    saveToLocalStorage(newFavouriteList);
+  const addFavoritesMS = async (movie) => {
+    try {
+      await addDoc(collection(db, "favorites"), movie);
+      console.log("Document added to 'favorites' collection successfully");
+    } catch (e) {
+      console.error("Error adding document to 'favorites' collection: ", e);
+    }
   };
 
   const removeFavouriteMovie = (movie) => {
