@@ -1,4 +1,6 @@
-# Proyecto parcial React Blog peliculas
+# Proyecto parcial React Blog peliculas 
+#Los ultimos cambios estan en la rama terminado (importante ) 
+
 ## Integrantes: Maria Paula Acero, Maria Juliana Giraldo
 
 Link video: https://youtu.be/QpleSAA16g4
