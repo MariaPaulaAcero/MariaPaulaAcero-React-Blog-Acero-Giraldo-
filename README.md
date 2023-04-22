@@ -1,3 +1,8 @@
+# Proyecto parcial React Blog peliculas
+## Integrantes: Maria Paula Acero, Maria Juliana Giraldo
+
+Link video: https://youtu.be/QpleSAA16g4
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
