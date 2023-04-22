@@ -1,0 +1,78 @@
+body{
+  background-image: linear-gradient(black, gray);
+  color: white;
+  
+}
+h3{
+  color: white;
+}
+
+.blog-post{
+  color: white;
+}
+
+.posters img {
+  width: 200px;
+  height: 250px;
+  object-fit: cover;
+}
+
+.posters{
+  display: flex;
+  flex-direction:row;
+}
+
+.movie-blog > .row{
+
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  height: 20vh;
+  
+}
+
+.image-container {
+  position: relative;
+  transition: transform 0.2s;
+  
+}
+
+.image-container:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  
+}
+
+.image-container:hover .overlay {
+  opacity: 1;
+}
+
+.overlay {
+  position:static;
+  background: Orgba(0, 0, 0.0, 0.8);
+  width: 100%;
+  transition: 0.5s ease;
+  opacity: 0;
+  bottom: 0;
+  font-size: 17px;
+  padding: 10px;
+  text-align: center;
+}
+
+.ml-3{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  margin: 1rem;
+  max-width: 250px;
+}
+
+
+.blog-container{
+  display: flex;
+  flex-direction:row;;
+  height: 80vh;
+  width: 90%;
+}
+
+
