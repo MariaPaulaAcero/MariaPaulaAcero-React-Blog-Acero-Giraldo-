@@ -7,9 +7,8 @@ import BlogPost from './components/BlogPost';
 import AddFavorite from './components/AddFavorite';
 import BlogListHeading from './components/BlogListHeading';
 import RemoveFavorites from './components/RemoveFavorites';
-import FavoriteView from './components/FavoriteView';
 import { db } from './firebase'
-import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc , writeBatch} from "firebase/firestore";
 
 const App = () => {
   const [movies, setMovies] = useState([]);
@@ -69,11 +68,6 @@ const App = () => {
     setSelectedMovie(null);
   };
 
-  const handleRemoveClick = (movie) => {
-    removeFavouriteMovie(movie);
-  };
-
-
 
   const saveToLocalStorage = (items) => {
     localStorage.setItem('react-movie-app-favourites', JSON.stringify(items));
@@ -90,22 +84,36 @@ const App = () => {
     }
   };
 
-  
   const removeFavouriteMovie = async (movie) => {
+    const newFavouriteList = favorites.filter(
+      (favorite) => favorite.imdbID !== movie.imdbID
+    );
+    
+    if (newFavouriteList.length === favorites.length) {
+      console.log('Movie not found in favorites list.');
+      return;
+    }
+    
+    setFavorites(newFavouriteList);
+    saveToLocalStorage(newFavouriteList);
+  
     const docRef = doc(db, 'favorites', movie.imdbID);
+    console.log('Trying to delete docRef:', docRef);
+    
     try {
       await deleteDoc(docRef);
-      const newFavouriteList = favorites.filter(
-        (favorite) => favorite.imdbID !== movie.imdbID
-      );
-      setFavorites(newFavouriteList);
-      saveToLocalStorage(newFavouriteList);
+      console.log('Document deleted successfully.');
+      const batch = writeBatch(db);
+      batch.delete(docRef);
+      await batch.commit(); // esperar a que se confirme la operación de eliminación en lote
     } catch (error) {
-     
-      console.error('Error removing document: ', error);
-      console.log('docRef: ', docRef);
+      console.error('Error removing document from Firestore:', error);
+      setFavorites(favorites);
+      saveToLocalStorage(favorites);
+      return;
     }
 };
+
   
   const getFavorites = async () => {
     const favoritesRef = collection(db, 'favorites');
@@ -119,7 +127,7 @@ const App = () => {
 
   return (
     <div className='App'>
-      <FavoriteView />
+      
       <div className='container-fluid movie-blog'>
 
         <div className='row d-flex align-items-center mt-4 mb-4'>
