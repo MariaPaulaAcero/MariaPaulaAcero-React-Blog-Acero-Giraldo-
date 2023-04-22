@@ -1,17 +1,18 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import{ getFirestore } from "firebase/firestore";
+import{ getFirestore, collection, getDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDpQ4looAjxBzviUNDMQopgYM8fpPxZphg",
-  authDomain: "api-blog-peliculas.firebaseapp.com",
-  projectId: "api-blog-peliculas",
-  storageBucket: "api-blog-peliculas.appspot.com",
-  messagingSenderId: "577297182460",
-  appId: "1:577297182460:web:4ac4715f099ac9c49ff179"
+  apiKey: "AIzaSyBdmy4g4JyfUK3nZzY1X4eafF_gnaCwGvk",
+  authDomain: "blogpeliculas-6336b.firebaseapp.com",
+  projectId: "blogpeliculas-6336b",
+  storageBucket: "blogpeliculas-6336b.appspot.com",
+  messagingSenderId: "1000762458991",
+  appId: "1:1000762458991:web:51f5e807164f3c00f8de9a",
+  measurementId: "G-9PVRQTGRXG"
 };
 
 // Initialize Firebase

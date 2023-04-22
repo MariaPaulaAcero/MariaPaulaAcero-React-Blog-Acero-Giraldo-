@@ -12,7 +12,7 @@ const BlogList = (props) => {
 
     return (
         <div className="posters">
-            {props.movies.map((movie, index) => (
+            {props.movies.map((movie) => (
                 <div
                     className="image-container d-flex flex-column align-items-center m-3 justify-content-start"
                     onClick={() => handleMovieClick(movie)}

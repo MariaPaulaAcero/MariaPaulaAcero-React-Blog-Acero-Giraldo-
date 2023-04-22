@@ -8,6 +8,8 @@ import AddFavorite from './components/AddFavorite';
 import BlogListHeading from './components/BlogListHeading';
 import RemoveFavorites from './components/RemoveFavorites';
 import FavoriteView from './components/FavoriteView';
+import { db } from './firebase'
+import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 const App = () => {
   const [movies, setMovies] = useState([]);
@@ -34,6 +36,9 @@ const App = () => {
     if (movieFavourites) {
       setFavorites(movieFavourites);
     }
+    getFavorites().then(data => {
+      setFavorites(data);
+    });
   }, []);
 
 
@@ -64,34 +69,57 @@ const App = () => {
     setSelectedMovie(null);
   };
 
+  const handleRemoveClick = (movie) => {
+    removeFavouriteMovie(movie);
+  };
+
 
 
   const saveToLocalStorage = (items) => {
     localStorage.setItem('react-movie-app-favourites', JSON.stringify(items));
   };
+
+  const addFavoritesMS = async (movie) => {
+    try {
+      await addDoc(collection(db, "favorites"), movie);
+      console.log("Document added to 'favorites' collection successfully");
+      const newFavouriteList = [...favorites, movie];
+      setFavorites(newFavouriteList);
+    } catch (e) {
+      console.error("Error adding document to 'favorites' collection: ", e);
+    }
+  };
+
   
-
-  const addFavoritesMS = (movie) => {
-    const newFavouriteList = [...favorites, movie];
-    setFavorites(newFavouriteList);
-    saveToLocalStorage(newFavouriteList);
+  const removeFavouriteMovie = async (movie) => {
+    const docRef = doc(db, 'favorites', movie.imdbID);
+    try {
+      await deleteDoc(docRef);
+      const newFavouriteList = favorites.filter(
+        (favorite) => favorite.imdbID !== movie.imdbID
+      );
+      setFavorites(newFavouriteList);
+      saveToLocalStorage(newFavouriteList);
+    } catch (error) {
+     
+      console.error('Error removing document: ', error);
+      console.log('docRef: ', docRef);
+    }
+};
+  
+  const getFavorites = async () => {
+    const favoritesRef = collection(db, 'favorites');
+    const snapshot = await getDocs(favoritesRef);
+    return snapshot.docs.map(doc => doc.data());
   };
 
-  const removeFavouriteMovie = (movie) => {
-    const newFavouriteList = favorites.filter(
-      (favorite) => favorite.imdbID !== movie.imdbID
-    );
-
-    setFavorites(newFavouriteList);
-    saveToLocalStorage(newFavouriteList);
-  };
 
 
 
 
   return (
     <div className='App'>
-      <FavoriteView/>
+      <FavoriteView />
       <div className='container-fluid movie-blog'>
 
         <div className='row d-flex align-items-center mt-4 mb-4'>
@@ -132,18 +160,7 @@ const App = () => {
 
           <div className='row d-flex align-items-center mt-4 mb-4'>
             <BlogListHeading heading='Favorites' />
-            <div className='col col-sm-4'>
-              <input
-
-                className='form-control'
-                type='search'
-                placeholder='Search'
-                aria-label='Search'
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-              />
-            </div>
-
+            
             <div className='row-bot'>
               <Navbar
                 handleBlogListClick={handleBlogListClick}
