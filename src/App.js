@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 import Navbar from './components/Navbar';
@@ -10,6 +10,12 @@ import RemoveFavorites from './components/RemoveFavorites';
 import FavoriteView from './components/FavoriteView';
 import { db } from './firebase'
 import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { MovieContext, MovieProvider } from './context/MovieGlobalState';
+import AddWatchList from './components/AddWatchList';
+import RemoveWatchList from './components/RemoveWatchList';
+// import { MovieProvider }  from './context/MovieProvider';
+
+
 
 const App = () => {
   const [movies, setMovies] = useState([]);
@@ -17,6 +23,9 @@ const App = () => {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [currentView, setCurrentView] = useState('blogList');
   const [favorites, setFavorites] = useState([]);
+  const [watchList, setWatchList] = useState([]);
+  const [lastFiveWatched, setLastFiveWatched] = useState([]);
+
 
   const getMovieRequest = async () => {
     const url = `http://www.omdbapi.com/?s=${searchValue}&apikey=d29dc057`;
@@ -41,11 +50,31 @@ const App = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const movieToWatchlist = JSON.parse(
+      localStorage.getItem('react-movie-app-watchList')
+    );
+
+    if (movieToWatchlist) {
+      setWatchList(movieToWatchlist);
+    }
+    getWatchList().then(data => {
+      setWatchList(data);
+      setLastFiveWatched(data.slice(0,5));
+    });
+  }, []);
+
 
 
   useEffect(() => {
     getMovieRequest();
   }, [searchValue]);
+
+  const handleLastFiveWatchedClick = (movies) => {
+    setMovies(movies);
+    setCurrentView('blogList');
+    setSelectedMovie(null);
+  };
 
 
   const handleMovieSelect = (movie) => {
@@ -69,10 +98,6 @@ const App = () => {
     setSelectedMovie(null);
   };
 
-  const handleRemoveClick = (movie) => {
-    removeFavouriteMovie(movie);
-  };
-
 
 
   const saveToLocalStorage = (items) => {
@@ -87,6 +112,17 @@ const App = () => {
       setFavorites(newFavouriteList);
     } catch (e) {
       console.error("Error adding document to 'favorites' collection: ", e);
+    }
+  };
+
+  const addWatchListMS = async (movie) => {
+    try {
+      await addDoc(collection(db, "watchList"), movie);
+      console.log("Document added to 'watchList' collection successfully");
+      const newWatchList = [...watchList, movie];
+      setWatchList(newWatchList);
+    } catch (e) {
+      console.error("Error adding document to 'watchList' collection: ", e);
     }
   };
 
@@ -106,10 +142,33 @@ const App = () => {
       console.log('docRef: ', docRef);
     }
 };
+
+const removeWatchList = async (movie) => {
+  const docRef = doc(db, 'watchList', movie.imdbID);
+  try {
+    await deleteDoc(docRef);
+    const newWatchList = watchList.filter(
+      (watchList) =>  watchList.imdbID !== movie.imdbID
+    );
+    setWatchList(newWatchList);
+    saveToLocalStorage(newWatchList);
+  } catch (error) {
+   
+    console.error('Error removing document: ', error);
+    console.log('docRef: ', docRef);
+  }
+};
   
   const getFavorites = async () => {
     const favoritesRef = collection(db, 'favorites');
     const snapshot = await getDocs(favoritesRef);
+    return snapshot.docs.map(doc => doc.data());
+  };
+  
+
+  const getWatchList = async () => {
+    const watchListRef = collection(db, 'watchList');
+    const snapshot = await getDocs(watchListRef);
     return snapshot.docs.map(doc => doc.data());
   };
 
@@ -120,6 +179,8 @@ const App = () => {
   return (
     <div className='App'>
       <FavoriteView />
+      <MovieProvider />
+      {/* <MovieProvider /> */}
       <div className='container-fluid movie-blog'>
 
         <div className='row d-flex align-items-center mt-4 mb-4'>
@@ -143,6 +204,7 @@ const App = () => {
             handleBlogListClick={handleBlogListClick}
             handleBlogPostClick={handleBlogPostClick}
             handleFavouritesClick={addFavoritesMS}
+            handleWatchlist={addWatchListMS}
           />
           <div className='blog-container'>
             {currentView === 'blogList' ? (
@@ -150,10 +212,14 @@ const App = () => {
                 movies={movies}
                 handleMovieSelect={handleMovieSelect}
                 favoriteComponent={AddFavorite}
+                watchListComponent={AddWatchList}
                 handleFavouritesClick={addFavoritesMS}
+                handleWatchlist={addWatchListMS}
+                
               />
             ) : (
-              <BlogPost movie={selectedMovie} handleBackClick={handleBackClick} />
+              <BlogPost movie={selectedMovie} handleBackClick={handleBackClick} handleLastFiveWatchedClick={handleLastFiveWatchedClick} lastFiveWatched={lastFiveWatched} />
+
             )}
           </div>
 
@@ -166,6 +232,7 @@ const App = () => {
                 handleBlogListClick={handleBlogListClick}
                 handleBlogPostClick={handleBlogPostClick}
                 handleFavouritesClick={removeFavouriteMovie}
+                
               />
               <div className='blog-container'>
                 {currentView === 'blogList' ? (
@@ -173,9 +240,42 @@ const App = () => {
                     movies={favorites}
                     handleMovieSelect={handleMovieSelect}
                     handleFavouritesClick={removeFavouriteMovie}
-                    favoriteComponent={RemoveFavorites} />
+                    favoriteComponent={RemoveFavorites} 
+                    watchListComponent={RemoveWatchList}
+                    handleWatchlist={removeWatchList}
+                    />
+                    
                 ) : (
-                  <BlogPost movie={selectedMovie} handleBackClick={handleBackClick} />
+                  <BlogPost movie={selectedMovie} handleBackClick={handleBackClick} handleLastFiveWatchedClick={handleLastFiveWatchedClick} lastFiveWatched={lastFiveWatched} />
+
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className='row d-flex align-items-center mt-4 mb-4'>
+            <BlogListHeading heading='watchList' />
+            
+            <div className='row-bot'>
+              <Navbar
+                handleBlogListClick={handleBlogListClick}
+                handleBlogPostClick={handleBlogPostClick}
+                handleFavouritesClick={removeFavouriteMovie}
+                handleWatchlist={removeWatchList}
+              />
+              <div className='blog-container'>
+                {currentView === 'blogList' ? (
+                  <BlogList
+                    movies={watchList}
+                    handleMovieSelect={handleMovieSelect}
+                    handleFavouritesClick={removeFavouriteMovie}
+                    favoriteComponent={RemoveFavorites} 
+                    watchListComponent={RemoveWatchList}
+                    handleWatchlist={removeWatchList}
+                    />
+                ) : (
+                  <BlogPost movie={selectedMovie} handleBackClick={handleBackClick} handleLastFiveWatchedClick={handleLastFiveWatchedClick} lastFiveWatched={lastFiveWatched} />
+
                 )}
               </div>
             </div>

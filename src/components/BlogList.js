@@ -1,14 +1,18 @@
 import React from "react";
-
+import { MovieContext } from '../context/MovieGlobalState';
+import {useContext} from 'react';
 
 const BlogList = (props) => {
-    const FavoriteComponent = props.favoriteComponent;
+    const { addMovieToWatchlist } = useContext(MovieContext);
+
     const handleMovieClick = (movie) => {
         props.handleMovieSelect(movie);
-   
     };
 
+    
 
+    const FavoriteComponent = props.favoriteComponent;
+    const WatchListComponent = props.watchListComponent;
 
     return (
         <div className="posters">
@@ -25,8 +29,15 @@ const BlogList = (props) => {
                     >
                         <FavoriteComponent />
                     </div>
+                    <div
+                        onClick={() => props.handleWatchlist(movie)}
+                        className="overlay d-flex align-items-center justify-content-center"
+                    >
+                        <WatchListComponent />
+                    </div>
                     <div className="ml-3">
                         <h3>{movie.Title}</h3>
+                        
                     </div>
                 </div>
             ))}
