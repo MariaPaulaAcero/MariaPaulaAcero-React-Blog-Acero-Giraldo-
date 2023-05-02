@@ -1,9 +1,27 @@
-import React from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { MovieContext } from '../context/MovieGlobalState';
-import {useContext} from 'react';
 
 const BlogList = (props) => {
-    const { addMovieToWatchlist } = useContext(MovieContext);
+    const { favoriteMovie, watchList } = useContext(MovieContext);
+    const [movies, setMovies] = useState([]);
+
+    useEffect(() => {
+        const setContext = () => {
+            if (props.type == "favorites") {
+                setMovies(favoriteMovie)
+            }else if (props.type == "wachList"){
+                
+                
+                setMovies(props.movies)
+            }else {
+                setMovies(props.movies)
+            }
+
+        }
+        setContext()
+        console.log(favoriteMovie)
+    
+      });
 
     const handleMovieClick = (movie) => {
         props.handleMovieSelect(movie);
@@ -14,9 +32,11 @@ const BlogList = (props) => {
     const FavoriteComponent = props.favoriteComponent;
     const WatchListComponent = props.watchListComponent;
 
+    
+
     return (
         <div className="posters">
-            {props.movies.map((movie) => (
+            {movies.map((movie) => (
                 <div
                     className="image-container d-flex flex-column align-items-center m-3 justify-content-start"
                     onClick={() => handleMovieClick(movie)}

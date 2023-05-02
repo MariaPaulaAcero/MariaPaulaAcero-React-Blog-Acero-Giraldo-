@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 import Navbar from './components/Navbar';
@@ -210,6 +210,7 @@ const removeWatchList = async (movie) => {
             {currentView === 'blogList' ? (
               <BlogList
                 movies={movies}
+                type = {""}
                 handleMovieSelect={handleMovieSelect}
                 favoriteComponent={AddFavorite}
                 watchListComponent={AddWatchList}
@@ -237,7 +238,9 @@ const removeWatchList = async (movie) => {
               <div className='blog-container'>
                 {currentView === 'blogList' ? (
                   <BlogList
-                    movies={favorites}
+                  type = {"favorites"}
+                  movies = {[]}
+                    
                     handleMovieSelect={handleMovieSelect}
                     handleFavouritesClick={removeFavouriteMovie}
                     favoriteComponent={RemoveFavorites} 
@@ -266,7 +269,9 @@ const removeWatchList = async (movie) => {
               <div className='blog-container'>
                 {currentView === 'blogList' ? (
                   <BlogList
-                    movies={watchList}
+                  type = {"wachList"}
+                  movies = {watchList}
+                    
                     handleMovieSelect={handleMovieSelect}
                     handleFavouritesClick={removeFavouriteMovie}
                     favoriteComponent={RemoveFavorites} 
