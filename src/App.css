@@ -84,6 +84,8 @@ h3{
   color: white;
   height: 100vh; /* Ajusta la altura del contenedor al 100% de la ventana */
   justify-content: center; /* Centra verticalmente */
+  
+  
 }
 
 .form-register {
@@ -110,6 +112,19 @@ input {
   justify-content: center;
   align-items: center;
 
+}
+
+.register-logged {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: black;
+  padding: 20px;
+  color: white;
+  margin-top: auto;
+  width: 60%;
+  margin-bottom: 0;
 }
 
 button {

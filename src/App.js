@@ -218,7 +218,7 @@ const removeWatchList = async (movie) => {
   return (
     <div className='App'>
       
-      <div>
+      <div> 
       <div className='register'>
       {!isLoggedIn && (
         <>
@@ -256,11 +256,16 @@ const removeWatchList = async (movie) => {
       </div>
       </>
       )}
+
+
+      <div className='register-logged '>
       <h4> User Logged in: {user ? 'Yes' : 'No'} </h4>
       {user && <p>Email: {user.email}</p>}
 
       <button className='register-button' onClick={logout}> Sing Out </button> 
       </div>
+      </div>
+      
       {isLoggedIn && (  
         <>
       <MovieProvider />
