@@ -12,7 +12,7 @@ import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore"
 import { MovieContext, MovieProvider } from './context/MovieGlobalState';
 import AddWatchList from './components/AddWatchList';
 import RemoveWatchList from './components/RemoveWatchList';
-import { createUserWithEmailAndPassword , onAuthStateChanged} from 'firebase/auth'
+import { createUserWithEmailAndPassword , onAuthStateChanged, signInWithEmailAndPassword, signOut} from 'firebase/auth'
 import { Await } from 'react-router-dom';
 import { db, auth} from './firebase'
 
@@ -77,7 +77,7 @@ const App = () => {
 
 
   // onAuthStateChanged(auth, (correntUser) => {
-  //    setUser(correntUser);
+  //     setUser(correntUser);
   // });
 
   const handleLastFiveWatchedClick = (movies) => {
@@ -193,11 +193,18 @@ const removeWatchList = async (movie) => {
   };
 
   const login = async () =>{
+    try {
+      const user=  await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+      console.log(user);
+    } catch (error) {
+      console.error(error.message);
+    }
+
   
   };
 
   const logout = async() =>{
-
+    await signOut(auth);
   };
 
 
@@ -239,13 +246,14 @@ const removeWatchList = async (movie) => {
           }}>
           </input>
 
-        <button> Login </button>
+        <button onClick={login}> Login </button>
       </div>
 
       <h4> User Logged in</h4>
-      {/* {auth.currentUser.email} */}
+     {/* {auth?.currentUser.email} */}
+     {user?.email}
 
-      <button> Sing Out </button>
+      <button onClick={logout}> Sing Out </button>
 
       <FavoriteView />
       <MovieProvider />
