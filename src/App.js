@@ -38,6 +38,7 @@ const App = () => {
   const [loginPassword, setLoginPassword] = useState('');
   const [loginEmail, setLoginEmail] = useState('');
   const [user, setUser] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 
   const getMovieRequest = async () => {
@@ -201,10 +202,9 @@ const removeWatchList = async (movie) => {
   
   const login = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-      const loggedInUser = userCredential.user;
-      console.log(loggedInUser);
-      setUser(loggedInUser);
+      const user = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+      console.log(user);
+      setIsLoggedIn(true); // Establecer isLoggedIn como true cuando se haya iniciado sesión correctamente
     } catch (error) {
       console.error(error.message);
     }
@@ -213,7 +213,7 @@ const removeWatchList = async (movie) => {
   const logout = async () => {
     try {
       await signOut(auth);
-      setUser(null); // Establece el estado del usuario como null al cerrar la sesión
+      setIsLoggedIn(false); // Establecer isLoggedIn como false al cerrar la sesión
     } catch (error) {
       console.error(error.message);
     }
@@ -267,9 +267,11 @@ const removeWatchList = async (movie) => {
       {user && <p>Email: {user.email}</p>}
 
       <button onClick={logout}> Sing Out </button> 
-
+      {isLoggedIn && (  
+        <>
       <FavoriteView />
       <MovieProvider />
+      
       <div className='container-fluid movie-blog'>
 
         <div className='row d-flex align-items-center mt-4 mb-4'>
@@ -377,6 +379,8 @@ const removeWatchList = async (movie) => {
 
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 };
