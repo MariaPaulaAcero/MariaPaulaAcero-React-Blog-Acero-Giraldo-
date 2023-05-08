@@ -222,44 +222,43 @@ const removeWatchList = async (movie) => {
   return (
     <div className='App'>
       
-      <div >
+      <div>
+      {!isLoggedIn && (
+        <>
+      <div>
         <h3>Register User</h3>
-        <input 
-        placeholder='Email...' 
-        onChange={(event) => {
-          setRegisterEmail(event.target.value)
-          }}>
-          </input>
-
-        <input 
-        placeholder='Password...'
-        onChange={(event) => {
-          setRegisterPassword(event.target.value)
-          }}>
-          </input>
-      
-        <button onClick ={register}>Create User</button>
-
+        <input
+          placeholder='Email...'
+          onChange={(event) => {
+            setRegisterEmail(event.target.value)
+          }}
+        />
+        <input
+          placeholder='Password...'
+          onChange={(event) => {
+            setRegisterPassword(event.target.value)
+          }}
+        />
+        <button onClick={register}>Create User</button>
       </div>
       <div>
-        <h3> Login </h3>
-        <input 
-        placeholder='Email...'
-        onChange={(event) => {
-          setLoginEmail(event.target.value)
-          }}>
-          </input>
-
-        <input 
-        placeholder='Password...'
-        onChange={(event) => {
-          setLoginPassword(event.target.value)
-          }}>
-          </input>
-
-        <button onClick={login}> Login </button>
+        <h3>Login</h3>
+        <input
+          placeholder='Email...'
+          onChange={(event) => {
+            setLoginEmail(event.target.value)
+          }}
+        />
+        <input
+          placeholder='Password...'
+          onChange={(event) => {
+            setLoginPassword(event.target.value)
+          }}
+        />
+        <button onClick={login}>Login</button>
       </div>
-
+      </>
+      )}
       <h4> User Logged in: {user ? 'Yes' : 'No'} </h4>
       {user && <p>Email: {user.email}</p>}
 
@@ -378,6 +377,7 @@ const removeWatchList = async (movie) => {
       </div>
       </>
       )}
+    </div>
     </div>
   );
 };
