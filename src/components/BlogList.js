@@ -32,11 +32,14 @@ const BlogList = (props) => {
     const FavoriteComponent = props.favoriteComponent;
     const WatchListComponent = props.watchListComponent;
 
+
+
     
 
     return (
         <div className="posters">
-            {movies.map((movie) => (
+
+            {props.movies.map((movie) => (
                 <div
                     className="image-container d-flex flex-column align-items-center m-3 justify-content-start"
                     onClick={() => handleMovieClick(movie)}

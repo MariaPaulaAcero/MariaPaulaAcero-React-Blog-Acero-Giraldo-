@@ -8,13 +8,13 @@ import AddFavorite from './components/AddFavorite';
 import BlogListHeading from './components/BlogListHeading';
 import RemoveFavorites from './components/RemoveFavorites';
 import FavoriteView from './components/FavoriteView';
-import { db } from './firebase'
 import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { MovieContext, MovieProvider } from './context/MovieGlobalState';
 import AddWatchList from './components/AddWatchList';
 import RemoveWatchList from './components/RemoveWatchList';
-// import { MovieProvider }  from './context/MovieProvider';
-
+import { createUserWithEmailAndPassword , onAuthStateChanged} from 'firebase/auth'
+import { Await } from 'react-router-dom';
+import { db, auth} from './firebase'
 
 
 const App = () => {
@@ -25,6 +25,11 @@ const App = () => {
   const [favorites, setFavorites] = useState([]);
   const [watchList, setWatchList] = useState([]);
   const [lastFiveWatched, setLastFiveWatched] = useState([]);
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginEmail, setLoginEmail] = useState('');
+  const [user, setUser] = useState({});
 
 
   const getMovieRequest = async () => {
@@ -69,6 +74,11 @@ const App = () => {
   useEffect(() => {
     getMovieRequest();
   }, [searchValue]);
+
+
+  // onAuthStateChanged(auth, (correntUser) => {
+  //    setUser(correntUser);
+  // });
 
   const handleLastFiveWatchedClick = (movies) => {
     setMovies(movies);
@@ -172,15 +182,73 @@ const removeWatchList = async (movie) => {
     return snapshot.docs.map(doc => doc.data());
   };
 
+  const register = async () => {
+    try {
+      const user=  await createUserWithEmailAndPassword(auth, registerEmail, registerPassword)
+      console.log(user);
+    } catch (error) {
+      console.error(error.message);
+    }
 
+  };
+
+  const login = async () =>{
+  
+  };
+
+  const logout = async() =>{
+
+  };
 
 
 
   return (
     <div className='App'>
+      <div >
+        <h3>Register User</h3>
+        <input 
+        placeholder='Email...' 
+        onChange={(event) => {
+          setRegisterEmail(event.target.value)
+          }}>
+          </input>
+
+        <input 
+        placeholder='Password...'
+        onChange={(event) => {
+          setRegisterPassword(event.target.value)
+          }}>
+          </input>
+      
+        <button onClick ={register}>Create User</button>
+
+      </div>
+      <div>
+        <h3> Login </h3>
+        <input 
+        placeholder='Email...'
+        onChange={(event) => {
+          setLoginEmail(event.target.value)
+          }}>
+          </input>
+
+        <input 
+        placeholder='Password...'
+        onChange={(event) => {
+          setLoginPassword(event.target.value)
+          }}>
+          </input>
+
+        <button> Login </button>
+      </div>
+
+      <h4> User Logged in</h4>
+      {/* {auth.currentUser.email} */}
+
+      <button> Sing Out </button>
+
       <FavoriteView />
       <MovieProvider />
-      {/* <MovieProvider /> */}
       <div className='container-fluid movie-blog'>
 
         <div className='row d-flex align-items-center mt-4 mb-4'>
