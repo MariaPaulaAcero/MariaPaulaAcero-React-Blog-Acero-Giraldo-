@@ -29,7 +29,7 @@ const App = () => {
   const [loginEmail, setLoginEmail] = useState('');
   const [user, setUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
 
 
   const getMovieRequest = async () => {
@@ -185,7 +185,6 @@ const removeWatchList = async (movie) => {
       const userCredential = await createUserWithEmailAndPassword(auth, registerEmail, registerPassword);
       const newUser = userCredential.user;
       setIsLoggedIn(true);
-      setIsAuthenticated(true);
       console.log(newUser);
       setUser(newUser);
     } catch (error) {
@@ -199,7 +198,6 @@ const removeWatchList = async (movie) => {
       const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
       const loggedInUser = userCredential.user;
       setIsLoggedIn(true);
-      setIsAuthenticated(true);
       console.log(loggedInUser);
       setUser(loggedInUser);
     } catch (error) {
@@ -212,7 +210,6 @@ const removeWatchList = async (movie) => {
     try {
       await signOut(auth);
       setIsLoggedIn(false);
-      setIsAuthenticated(false);
       setUser(null); // Establecer isLoggedIn como false al cerrar la sesión
     } catch (error) {
       console.error(error.message);
