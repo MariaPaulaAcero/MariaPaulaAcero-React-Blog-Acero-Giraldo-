@@ -192,9 +192,11 @@ const removeWatchList = async (movie) => {
   
   const login = async () => {
     try {
-      const user = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-      console.log(user);
-      setIsLoggedIn(true); // Establecer isLoggedIn como true cuando se haya iniciado sesión correctamente
+      const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+      const loggedInUser = userCredential.user;
+      setIsLoggedIn(true);
+      console.log(loggedInUser);
+      setUser(loggedInUser);
     } catch (error) {
       console.error(error.message);
     }
@@ -208,7 +210,7 @@ const removeWatchList = async (movie) => {
       console.error(error.message);
     }
   };
- 
+   
 
   return (
     <div className='App'>
