@@ -12,18 +12,8 @@ import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore"
 import { MovieContext, MovieProvider } from './context/MovieGlobalState';
 import AddWatchList from './components/AddWatchList';
 import RemoveWatchList from './components/RemoveWatchList';
-import { createUserWithEmailAndPassword , onAuthStateChanged, signInWithEmailAndPassword, signOut} from 'firebase/auth'
-import { Await } from 'react-router-dom';
+import { createUserWithEmailAndPassword , signInWithEmailAndPassword, signOut} from 'firebase/auth'
 import { db, auth} from './firebase'
-import Auth from './Auth'
-import { FirebaseAppProvider, useFirebaseAp, useAuth } from 'reactfire';
-import firebaseConfig from './firebase'
-
-
-// import Auth from './Auth'
-// import SignIn from './auth/SignIn';
-// import SignUp from './auth/SignUp';
-
 
 const App = () => {
   const [movies, setMovies] = useState([]);
@@ -218,12 +208,10 @@ const removeWatchList = async (movie) => {
       console.error(error.message);
     }
   };
-  // const userr = useAuth();
+ 
 
   return (
     <div className='App'>
-      {/* { userr && <p> User: {userr.email} </p>}
-      <Auth /> */}
       
       <div >
         <h3>Register User</h3>
