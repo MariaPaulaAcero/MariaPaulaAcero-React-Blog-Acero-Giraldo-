@@ -7,7 +7,6 @@ import BlogPost from './components/BlogPost';
 import AddFavorite from './components/AddFavorite';
 import BlogListHeading from './components/BlogListHeading';
 import RemoveFavorites from './components/RemoveFavorites';
-import FavoriteView from './components/FavoriteView';
 import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { MovieContext, MovieProvider } from './context/MovieGlobalState';
 import AddWatchList from './components/AddWatchList';
@@ -264,7 +263,6 @@ const removeWatchList = async (movie) => {
       </div>
       {isLoggedIn && (  
         <>
-      <FavoriteView />
       <MovieProvider />
       
       <div className='container-fluid movie-blog'>
