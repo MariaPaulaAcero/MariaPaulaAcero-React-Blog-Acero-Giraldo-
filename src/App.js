@@ -220,23 +220,24 @@ const removeWatchList = async (movie) => {
     <div className='App'>
       
       <div>
+      <div className='register'>
       {!isLoggedIn && (
         <>
-      <div>
+        <div>
         <h3>Register User</h3>
         <input
           placeholder='Email...'
           onChange={(event) => {
             setRegisterEmail(event.target.value)
           }}
-        />
+          />
         <input
           placeholder='Password...'
           onChange={(event) => {
             setRegisterPassword(event.target.value)
           }}
         />
-        <button onClick={register}>Create User</button>
+        <button className='register-button' onClick={register}>Create User</button>
       </div>
       <div>
         <h3>Login</h3>
@@ -252,14 +253,15 @@ const removeWatchList = async (movie) => {
             setLoginPassword(event.target.value)
           }}
         />
-        <button onClick={login}>Login</button>
+        <button className='register-button' onClick={login}>Login</button>
       </div>
       </>
       )}
       <h4> User Logged in: {user ? 'Yes' : 'No'} </h4>
       {user && <p>Email: {user.email}</p>}
 
-      <button onClick={logout}> Sing Out </button> 
+      <button className='register-button' onClick={logout}> Sing Out </button> 
+      </div>
       {isLoggedIn && (  
         <>
       <FavoriteView />

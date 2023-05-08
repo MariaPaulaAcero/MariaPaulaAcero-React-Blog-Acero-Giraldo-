@@ -5,8 +5,8 @@ const BlogPost = ({ movie, handleBackClick, handleLastFiveWatchedClick, lastFive
 
   return (
     <div className='blog-post'>
-      <button onClick={handleBackClick}>Volver a la lista de publicaciones</button>
-      <button onClick={() => handleLastFiveWatchedClick(lastFiveWatched)}>Últimas 5 películas agregadas al watchlist</button>
+      <button className='post-button' onClick={handleBackClick}>Volver a la lista de publicaciones</button>
+      <button className='post-button' onClick={() => handleLastFiveWatchedClick(lastFiveWatched)}>Últimas 5 películas agregadas al watchlist</button>
 
       <h2>{Title}</h2>
       <p>Año: {Year}</p>
