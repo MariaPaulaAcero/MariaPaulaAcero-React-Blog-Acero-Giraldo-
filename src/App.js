@@ -205,13 +205,13 @@ const removeWatchList = async (movie) => {
   const logout = async () => {
     try {
       await signOut(auth);
-      setIsLoggedIn(false); // Establecer isLoggedIn como false al cerrar la sesión
+      setIsLoggedIn(false);
+      setUser(null); // Establecer isLoggedIn como false al cerrar la sesión
     } catch (error) {
       console.error(error.message);
     }
   };
-   
-
+  
   return (
     <div className='App'>
       
