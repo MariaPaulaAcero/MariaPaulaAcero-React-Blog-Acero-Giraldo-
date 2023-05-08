@@ -15,6 +15,14 @@ import RemoveWatchList from './components/RemoveWatchList';
 import { createUserWithEmailAndPassword , onAuthStateChanged, signInWithEmailAndPassword, signOut} from 'firebase/auth'
 import { Await } from 'react-router-dom';
 import { db, auth} from './firebase'
+import Auth from './Auth'
+import { FirebaseAppProvider, useFirebaseAp, useAuth } from 'reactfire';
+import firebaseConfig from './firebase'
+
+
+// import Auth from './Auth'
+// import SignIn from './auth/SignIn';
+// import SignUp from './auth/SignUp';
 
 
 const App = () => {
@@ -76,9 +84,7 @@ const App = () => {
   }, [searchValue]);
 
 
-  // onAuthStateChanged(auth, (correntUser) => {
-  //     setUser(correntUser);
-  // });
+ 
 
   const handleLastFiveWatchedClick = (movies) => {
     setMovies(movies);
@@ -184,33 +190,41 @@ const removeWatchList = async (movie) => {
 
   const register = async () => {
     try {
-      const user=  await createUserWithEmailAndPassword(auth, registerEmail, registerPassword)
-      console.log(user);
+      const userCredential = await createUserWithEmailAndPassword(auth, registerEmail, registerPassword);
+      const newUser = userCredential.user;
+      console.log(newUser);
+      setUser(newUser);
     } catch (error) {
       console.error(error.message);
     }
-
   };
-
-  const login = async () =>{
-    try {
-      const user=  await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-      console.log(user);
-    } catch (error) {
-      console.error(error.message);
-    }
-
   
+  const login = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+      const loggedInUser = userCredential.user;
+      console.log(loggedInUser);
+      setUser(loggedInUser);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
-  const logout = async() =>{
-    await signOut(auth);
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null); // Establece el estado del usuario como null al cerrar la sesión
+    } catch (error) {
+      console.error(error.message);
+    }
   };
-
-
+  // const userr = useAuth();
 
   return (
     <div className='App'>
+      {/* { userr && <p> User: {userr.email} </p>}
+      <Auth /> */}
+      
       <div >
         <h3>Register User</h3>
         <input 
@@ -249,11 +263,10 @@ const removeWatchList = async (movie) => {
         <button onClick={login}> Login </button>
       </div>
 
-      <h4> User Logged in</h4>
-     {/* {auth?.currentUser.email} */}
-     {user?.email}
+      <h4> User Logged in: {user ? 'Yes' : 'No'} </h4>
+      {user && <p>Email: {user.email}</p>}
 
-      <button onClick={logout}> Sing Out </button>
+      <button onClick={logout}> Sing Out </button> 
 
       <FavoriteView />
       <MovieProvider />
