@@ -1,26 +1,27 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css'
+import './App.css';
 import Navbar from './components/Navbar';
 import BlogList from './components/BlogList';
 import BlogPost from './components/BlogPost';
 import AddFavorite from './components/AddFavorite';
 import BlogListHeading from './components/BlogListHeading';
 import RemoveFavorites from './components/RemoveFavorites';
-import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { MovieContext, MovieProvider } from './context/MovieGlobalState';
 import AddWatchList from './components/AddWatchList';
 import RemoveWatchList from './components/RemoveWatchList';
-import { createUserWithEmailAndPassword , signInWithEmailAndPassword, signOut} from 'firebase/auth'
-import { db, auth} from './firebase'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { db, auth } from './firebase';
+import {DataProvider } from './context/MovieContext';
 
 const App = () => {
   const [movies, setMovies] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [currentView, setCurrentView] = useState('blogList');
-  const [favorites, setFavorites] = useState([]);
-  const [watchList, setWatchList] = useState([]);
+  //const [favorites, setFavorites] = useState([]);
+  //const [watchList, setWatchList] = useState([]);
   const [lastFiveWatched, setLastFiveWatched] = useState([]);
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
@@ -28,7 +29,8 @@ const App = () => {
   const [loginEmail, setLoginEmail] = useState('');
   const [user, setUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const { watchList, favorites, setWatchList, setFavorites } = useContext(MovieContext);
+  // const { watchList, favorites } = useContext(MovieContext);
 
 
   const getMovieRequest = async () => {
@@ -42,29 +44,16 @@ const App = () => {
   };
 
   useEffect(() => {
-    const movieFavourites = JSON.parse(
-      localStorage.getItem('react-movie-app-favourites')
-    );
-
-    if (movieFavourites) {
-      setFavorites(movieFavourites);
-    }
-    getFavorites().then(data => {
-      setFavorites(data);
+    getFavorites().then((data) => {
+      setFavorites(prev => [...prev,data]);
     });
   }, []);
 
   useEffect(() => {
-    const movieToWatchlist = JSON.parse(
-      localStorage.getItem('react-movie-app-watchList')
-    );
-
-    if (movieToWatchlist) {
-      setWatchList(movieToWatchlist);
-    }
-    getWatchList().then(data => {
+    getWatchList().then((data) => {
       setWatchList(data);
       setLastFiveWatched(data.slice(0,5));
+      
     });
   }, []);
 
@@ -74,7 +63,6 @@ const App = () => {
     getMovieRequest();
   }, [searchValue]);
 
-
  
 
   const handleLastFiveWatchedClick = (movies) => {
@@ -82,7 +70,6 @@ const App = () => {
     setCurrentView('blogList');
     setSelectedMovie(null);
   };
-
 
   const handleMovieSelect = (movie) => {
     setSelectedMovie(movie);
@@ -105,11 +92,6 @@ const App = () => {
     setSelectedMovie(null);
   };
 
-
-
-  const saveToLocalStorage = (items) => {
-    localStorage.setItem('react-movie-app-favourites', JSON.stringify(items));
-  };
 
   const addFavoritesMS = async (movie) => {
     try {
@@ -142,13 +124,11 @@ const App = () => {
         (favorite) => favorite.imdbID !== movie.imdbID
       );
       setFavorites(newFavouriteList);
-      saveToLocalStorage(newFavouriteList);
     } catch (error) {
-     
       console.error('Error removing document: ', error);
       console.log('docRef: ', docRef);
     }
-};
+  };
 
 const removeWatchList = async (movie) => {
   const docRef = doc(db, 'watchList', movie.imdbID);
@@ -158,7 +138,6 @@ const removeWatchList = async (movie) => {
       (watchList) =>  watchList.imdbID !== movie.imdbID
     );
     setWatchList(newWatchList);
-    saveToLocalStorage(newWatchList);
   } catch (error) {
    
     console.error('Error removing document: ', error);
@@ -216,8 +195,8 @@ const removeWatchList = async (movie) => {
   };
   
   return (
+    <DataProvider>
     <div className='App'>
-      
       <div> 
       <div className='register'>
       {!isLoggedIn && (
@@ -257,7 +236,6 @@ const removeWatchList = async (movie) => {
       </>
       )}
 
-
       <div className='register-logged '>
       <h4> User Logged in: {user ? 'Yes' : 'No'} </h4>
       {user && <p>Email: {user.email}</p>}
@@ -267,9 +245,7 @@ const removeWatchList = async (movie) => {
       </div>
       
       {isLoggedIn && (  
-        <>
-      <MovieProvider />
-      
+        <>      
       <div className='container-fluid movie-blog'>
 
         <div className='row d-flex align-items-center mt-4 mb-4'>
@@ -313,7 +289,6 @@ const removeWatchList = async (movie) => {
             )}
           </div>
 
-
           <div className='row d-flex align-items-center mt-4 mb-4'>
             <BlogListHeading heading='Favorites' />
             
@@ -328,7 +303,7 @@ const removeWatchList = async (movie) => {
                 {currentView === 'blogList' ? (
                   <BlogList
                   type = {"favorites"}
-                  movies = {[]}
+                  movies = {favorites}
                     
                     handleMovieSelect={handleMovieSelect}
                     handleFavouritesClick={removeFavouriteMovie}
@@ -381,9 +356,10 @@ const removeWatchList = async (movie) => {
       )}
     </div>
     </div>
+    </DataProvider>
   );
 };
 
 
-
 export default App;
+
