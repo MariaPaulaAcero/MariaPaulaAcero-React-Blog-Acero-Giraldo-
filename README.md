@@ -1,5 +1,5 @@
 # Proyecto parcial React Blog peliculas 
-#Los ultimos cambios estan en la rama terminado (importante ) 
+#Los ultimos cambios estan en la rama Feature/context-autenticacion
 
 ## Integrantes: Maria Paula Acero, Maria Juliana Giraldo
 
