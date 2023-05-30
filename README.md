@@ -4,7 +4,7 @@
 ## Integrantes: Maria Paula Acero, Maria Juliana Giraldo
 
 ## Link video: https://youtu.be/QpleSAA16g4
-## Link video Entrega final:
+## Link video Entrega final: https://www.youtube.com/watch?v=v0Pg9t5doas
 ***
 
 # Getting Started with Create React App
