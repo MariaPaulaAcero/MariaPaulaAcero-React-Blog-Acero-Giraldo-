@@ -21,15 +21,9 @@ const BlogList = (props) => {
         setMovies(props.movies)
       }
     };
-    const fetchData = async () => {
-      const watchListsRef = collection(db, 'watchList');
-      const watchListSnapshot = await getDocs(watchListsRef);
-      const watchListData = watchListSnapshot.docs.map(doc => doc.data());
-      setMovies(watchListData);
-    };
     setContext();
 
-  }, [favorites, props.movies, props.type, watchList]);
+  });
 
   const handleMovieClick = (movie) => {
     props.handleMovieSelect(movie);
@@ -42,11 +36,10 @@ const BlogList = (props) => {
     <div className="posters">
       {movies.map((movie) => (
         <div
-          className="image-container d-flex flex-column align-items-center m-3 justify-content-start"
-          onClick={() => handleMovieClick(movie)}
+          className="image-container d-flex flex-column align-items-center m-3 justify-content-start"      
           key={movie.imdbID}
         >
-          <img src={movie.Poster} alt="movie" />
+          <img src={movie.Poster} alt="movie" onClick={() => handleMovieClick(movie)}/>
           <div
             onClick={() => props.handleFavouritesClick(movie)}
             className="overlay d-flex align-items-center justify-content-center"

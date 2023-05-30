@@ -7,7 +7,7 @@ import BlogPost from './components/BlogPost';
 import AddFavorite from './components/AddFavorite';
 import BlogListHeading from './components/BlogListHeading';
 import RemoveFavorites from './components/RemoveFavorites';
-import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, query,where} from 'firebase/firestore';
 import { MovieContext, MovieProvider } from './context/MovieGlobalState';
 import AddWatchList from './components/AddWatchList';
 import RemoveWatchList from './components/RemoveWatchList';
@@ -47,7 +47,7 @@ const App = () => {
     getFavorites().then((data) => {
       setFavorites(prev => [...prev,data]);
     });
-  }, []);
+  }, [favorites]);
 
   useEffect(() => {
     getWatchList().then((data) => {
@@ -55,7 +55,7 @@ const App = () => {
       setLastFiveWatched(data.slice(0,5));
       
     });
-  }, []);
+  }, [watchList]);
 
 
 
@@ -117,31 +117,42 @@ const App = () => {
 
   
   const removeFavouriteMovie = async (movie) => {
-    const docRef = doc(db, 'favorites', movie.imdbID);
+
     try {
-      await deleteDoc(docRef);
-      const newFavouriteList = favorites.filter(
-        (favorite) => favorite.imdbID !== movie.imdbID
-      );
-      setFavorites(newFavouriteList);
+      // Create a query to find the document with the matching IMDb ID
+      const moviesRef = collection(db, 'favorites');
+      const q = query(moviesRef, where('imdbID', '==', movie.imdbID));
+      
+      // Retrieve the matching document
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (doc) => {
+        // Delete the document
+        await deleteDoc(doc.ref);
+        console.log('Document successfully deleted!');
+      });
+      getFavorites().then((data) => {
+        setFavorites(prev => [...prev,data]);
+      });
     } catch (error) {
       console.error('Error removing document: ', error);
-      console.log('docRef: ', docRef);
     }
   };
 
 const removeWatchList = async (movie) => {
-  const docRef = doc(db, 'watchList', movie.imdbID);
   try {
-    await deleteDoc(docRef);
-    const newWatchList = watchList.filter(
-      (watchList) =>  watchList.imdbID !== movie.imdbID
-    );
-    setWatchList(newWatchList);
+    // Create a query to find the document with the matching IMDb ID
+    const moviesRef = collection(db, 'watchList');
+    const q = query(moviesRef, where('imdbID', '==', movie.imdbID));
+    
+    // Retrieve the matching document
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (doc) => {
+      // Delete the document
+      await deleteDoc(doc.ref);
+      console.log('Document successfully deleted!');
+    });
   } catch (error) {
-   
     console.error('Error removing document: ', error);
-    console.log('docRef: ', docRef);
   }
 };
   

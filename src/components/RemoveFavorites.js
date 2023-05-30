@@ -12,6 +12,7 @@ const RemoveFavorites = () => {
 				class='bi bi-x-square'
 				fill='currentColor'
 				xmlns='http://www.w3.org/2000/svg'
+				data-testid="remove-favorites-svg"
 			>
 				<path
 					fill-rule='evenodd'

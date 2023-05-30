@@ -25,7 +25,7 @@ export const DataProvider = ({ children }) => {
     };
 
     fetchData();
-  }, []);
+  });
 
   return (
     <DataContext.Provider value={{ favorites, watchList }}>
